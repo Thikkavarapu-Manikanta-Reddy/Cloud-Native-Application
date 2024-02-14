@@ -42,20 +42,11 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
-    services:
-      mysql:
-        image: mysql:latest
-        env:
-          DB_USER: "root"
-          DB_PASSWORD: "Godofwar@321"
-          MYSQL_ROOT_PASSWORD: "Godofwar@321"
-          DB_NAME: "sys"
-          DB_HOSTNAME: "localhost"
-        options: >-
-          --health-cmd="mysqladmin ping"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=3
+    env:
+      DB_USER: "root"
+      DB_PASSWORD: "Godofwar@321"
+      DB_NAME: "sys"
+      DB_HOSTNAME: "localhost"
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -70,12 +61,13 @@ jobs:
       - name: Install dependencies
         run: npm ci
       # - run: npm run build --if-present
-      - name: Display MySQL Container Logs
-        run: docker logs mysql
+
+      - name: Start MYSQL Server
+        run: sudo /etc/init.d/mysql start
 
       - name: Start Server
         run: npm run start
-        
+
       - name: Run Test
         run: npm run test2
 
