@@ -48,6 +48,7 @@ jobs:
         env:
           DB_USER: "root"
           DB_PASSWORD: "Godofwar@321"
+          MYSQL_ROOT_PASSWORD: "Godofwar@321"
           DB_NAME: "sys"
           DB_HOSTNAME: "localhost"
         options: >-
