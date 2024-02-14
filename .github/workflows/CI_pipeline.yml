@@ -34,7 +34,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
       # - run: npm run build --if-present
-      - run: npm test
+      - name: Run Test
+        run: npm test
 
   Integration-Test-2:
     name: integration-test-check-2
@@ -54,5 +55,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
       # - run: npm run build --if-present
-      - run: npm run test2
+      - name: Start Server
+        run: npm run start
+      - name: Run Test
+        run: npm run test2
 
