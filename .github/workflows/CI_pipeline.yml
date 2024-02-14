@@ -89,5 +89,5 @@ jobs:
       - name: Run Test
         run: npm run test2
       - name: Stop Server
-        run: kill $SERVER_PID
+        run: kill -SIGKILL $SERVER_PID
 
