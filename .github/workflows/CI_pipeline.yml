@@ -52,7 +52,6 @@ jobs:
       mysql:
         image: mysql:latest
         env:
-          MYSQL_DATABASE: "sys"
           MYSQL_ROOT_PASSWORD: "Godofwar@321"
         ports:
           - 3306:3306
