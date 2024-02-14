@@ -51,8 +51,6 @@ jobs:
           MYSQL_ROOT_PASSWORD: "Godofwar@321"
           DB_NAME: "sys"
           DB_HOSTNAME: "localhost"
-        ports:
-          - 3306:3306
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
