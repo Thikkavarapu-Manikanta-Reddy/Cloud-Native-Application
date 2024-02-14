@@ -84,10 +84,7 @@ jobs:
 
       - name: Start Server
         run: npm run start &
-        env:
-          SERVER_PID: $!
+
       - name: Run Test
         run: npm run test2
-      - name: Stop Server
-        run: kill -15 $SERVER_PID
 
