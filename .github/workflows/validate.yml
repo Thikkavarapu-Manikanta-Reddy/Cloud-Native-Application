@@ -27,4 +27,4 @@ jobs:
       run: packer fmt packer
 
     - name: Validate Packer Template
-      run: packer validate packer
+      run: packer validate -var "project_id=${{ secrets.GCP_PROJECT_ID }}" -var "zone=${{ secrets.ZONE }}" packer
