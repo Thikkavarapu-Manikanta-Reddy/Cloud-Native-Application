@@ -1,0 +1,30 @@
+name: Packer Checks
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]  
+
+jobs:
+  packer-checks:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install Packer
+      uses: hashicorp/setup-packer@main
+
+    - name: List Files
+      run: ls
+
+    - name: Initialize Packer
+      run: packer init packer
+
+    - name: Format Packer Template
+      run: packer fmt packer
+
+    - name: Validate Packer Template
+      run: packer validate packer
