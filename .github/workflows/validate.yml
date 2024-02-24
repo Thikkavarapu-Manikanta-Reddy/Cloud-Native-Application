@@ -17,6 +17,9 @@ jobs:
     - name: Install Packer
       uses: hashicorp/setup-packer@main
 
+    - name: Build application artifact
+      run: zip -r webapp.zip ./
+
     - name: List Files
       run: ls
 
