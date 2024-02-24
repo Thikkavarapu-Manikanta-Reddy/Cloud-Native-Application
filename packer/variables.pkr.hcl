@@ -12,7 +12,7 @@ variable "image_name" {
 variable "zone" {
   type        = string
   description = "The zone where the GCP resources will be created"
-  default     = "us-central1-a"
+  default     = "us-central1-c"
 }
 
 variable ssh_user {
