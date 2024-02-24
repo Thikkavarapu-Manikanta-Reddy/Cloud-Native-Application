@@ -16,6 +16,8 @@ jobs:
         DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         DB_NAME: ${{ secrets.DB_NAME }}
         DB_HOSTNAME: ${{ secrets.DB_HOSTNAME }}
+        PKR_VAR_sql_user: ${{ secrets.DB_USER }}
+        PKR_VAR_sql_password: ${{ secrets.DB_PASSWORD }}
 
     steps:
       - uses: actions/checkout@v3

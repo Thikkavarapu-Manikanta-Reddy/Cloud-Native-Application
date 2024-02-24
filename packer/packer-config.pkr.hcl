@@ -9,17 +9,11 @@ packer {
 
 source "googlecompute" "custom-mi" {
   project_id          = var.project_id
+  image_name          = "${var.image_name}-${formatdate("YYYY-MM-DD-hh-mm-ss", timestamp())}"
   zone                = var.zone
-  network             = var.network
-  image_name          = var.image_name
-  ssh_username        = var.ssh_username
   source_image_family = var.source_image_family
-  # disk_size              = "20"
-  # disk_type              = "pd-standard"
-  # image_description      = "A custom image with webapp pre-installed"
-  # image_family           = "csye6255-app-image"
-  # image_project_id       = "csye6255-assignemnt-3"
-  # image_storage_locations = ["us"]
+  image_family        = var.image_family
+  ssh_username        = var.ssh_user
 }
 
 build {
