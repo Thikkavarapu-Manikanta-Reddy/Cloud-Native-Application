@@ -17,14 +17,6 @@ jobs:
         DB_NAME: ${{ secrets.DB_NAME }}
         DB_HOSTNAME: ${{ secrets.DB_HOSTNAME }}
 
-    services:
-      mysql:
-        image: mysql:latest
-        env:
-          MYSQL_ROOT_PASSWORD: "Godofwar@321"
-        ports:
-          - 3306:3306
-
     steps:
       - uses: actions/checkout@v3
       # set a new variable to the current date
@@ -42,11 +34,8 @@ jobs:
         run: npm ci
       # - run: npm run build --if-present
 
-      - name: Start Server
-        run: npm run start &
-
       - name: Run Test
-        run: npm run test2
+        run: npm run test
 
       # Authenticate with GCP using service account key
       - name: Set up Google Cloud SDK
