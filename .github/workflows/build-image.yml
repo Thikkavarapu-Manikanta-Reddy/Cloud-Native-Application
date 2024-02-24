@@ -17,35 +17,36 @@ jobs:
         DB_NAME: ${{ secrets.DB_NAME }}
         DB_HOSTNAME: ${{ secrets.DB_HOSTNAME }}
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+    services:
+      mysql:
+        image: mysql:latest
+        env:
+          MYSQL_ROOT_PASSWORD: "Godofwar@321"
+        ports:
+          - 3306:3306
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
+    steps:
+      - uses: actions/checkout@v3
+      # set a new variable to the current date
+      - name: Set sequalize environment
+        run: export NODE_ENV=development
+      - name: Use Node.js
+        uses: actions/setup-node@v3
         with:
-          node-version: '18'
+          node-version: 19.4
       
       - name: Build application artifact
         run: zip -r webapp.zip ./
       
-      - name: Install MySQL
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y mysql-server
-          sudo /etc/init.d/mysql start
-          sudo systemctl enable mysql
-          sudo systemctl status mysql
+      - name: Install dependencies
+        run: npm ci
+      # - run: npm run build --if-present
 
-      - name: Configure MySQL
-        run: |
-          sudo mysql --user=${{ secrets.DB_USER }} --password=${{ secrets.DB_PASSWORD }} --execute="CREATE DATABASE IF NOT EXISTS ${{ secrets.DB_NAME }};"
+      - name: Start Server
+        run: npm run start &
 
-      - name: Install Dependencies
-        run: npm install
-
-      - name: Run Integration Tests
-        run: npm run test
+      - name: Run Test
+        run: npm run test2
 
       # Authenticate with GCP using service account key
       - name: Set up Google Cloud SDK
