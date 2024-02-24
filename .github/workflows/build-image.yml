@@ -1,0 +1,72 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    env:
+        HOST: ${{ secrets.HOST }}
+        USER_NAME: ${{ secrets.DB_USER }}
+        PASSWORD: ${{ secrets.DB_PASSWORD }}
+        DATABASE: ${{ secrets.DATABASE }}
+        PKR_VAR_sql_user: ${{ secrets.DB_USER }}
+        PKR_VAR_sql_password: ${{ secrets.DB_PASSWORD }}
+        PORT: ${{ secrets.PORT}}
+
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18'
+      
+      - name: Create .env file
+        run: |
+          touch .env
+          echo "HOST=${{ secrets.HOST }}" > .env
+          echo "USER_NAME=${{ secrets.DB_USER }}" >> .env
+          echo "PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+          echo "DATABASE=${{ secrets.DATABASE }}" >> .env
+          echo "PORT: ${{ secrets.PORT}}" >> .env
+      
+      - name: Build application artifact
+        run: zip -r webapp.zip ./
+      
+      - name: Install MySQL
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y mysql-server
+          sudo /etc/init.d/mysql start
+          sudo systemctl enable mysql
+          sudo systemctl status mysql
+
+      - name: Configure MySQL
+        run: |
+          sudo mysql --user=${{ secrets.DB_USER }} --password=${{ secrets.DB_PASSWORD }} --execute="CREATE DATABASE IF NOT EXISTS ${{ secrets.DATABASE }};"
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run Integration Tests
+        run: npm run test:integration
+
+      # Authenticate with GCP using service account key
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
+
+      - name: Install Packer
+        uses: hashicorp/setup-packer@main
+
+      - name: Build image
+        run: |
+          packer init -var "project_id=${{ secrets.GCP_PROJECT_ID }}" -var "zone=${{ secrets.ZONE }}" packer
+          packer build -var "project_id=${{ secrets.GCP_PROJECT_ID }}" -var "zone=${{ secrets.ZONE }}" packer
