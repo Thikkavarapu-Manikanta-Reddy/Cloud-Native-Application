@@ -1,22 +1,21 @@
 name: Build and Deploy
 
+# Controls when the workflow will run
 on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
-    branches:
-      - main
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     env:
-        HOST: ${{ secrets.HOST }}
-        USER_NAME: ${{ secrets.DB_USER }}
-        PASSWORD: ${{ secrets.DB_PASSWORD }}
-        DATABASE: ${{ secrets.DATABASE }}
-        PKR_VAR_sql_user: ${{ secrets.DB_USER }}
-        PKR_VAR_sql_password: ${{ secrets.DB_PASSWORD }}
-        PORT: ${{ secrets.PORT}}
-
+        DB_USER: ${{ secrets.DB_USER }}
+        DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+        DB_NAME: ${{ secrets.DB_NAME }}
+        DB_HOSTNAME: ${{ secrets.DB_HOSTNAME }}
 
     steps:
       - name: Checkout code
@@ -26,15 +25,6 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '18'
-      
-      - name: Create .env file
-        run: |
-          touch .env
-          echo "HOST=${{ secrets.HOST }}" > .env
-          echo "USER_NAME=${{ secrets.DB_USER }}" >> .env
-          echo "PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
-          echo "DATABASE=${{ secrets.DATABASE }}" >> .env
-          echo "PORT: ${{ secrets.PORT}}" >> .env
       
       - name: Build application artifact
         run: zip -r webapp.zip ./
@@ -49,13 +39,13 @@ jobs:
 
       - name: Configure MySQL
         run: |
-          sudo mysql --user=${{ secrets.DB_USER }} --password=${{ secrets.DB_PASSWORD }} --execute="CREATE DATABASE IF NOT EXISTS ${{ secrets.DATABASE }};"
+          sudo mysql --user=${{ secrets.DB_USER }} --password=${{ secrets.DB_PASSWORD }} --execute="CREATE DATABASE IF NOT EXISTS ${{ secrets.DB_NAME }};"
 
       - name: Install Dependencies
         run: npm install
 
       - name: Run Integration Tests
-        run: npm run test:integration
+        run: npm run test
 
       # Authenticate with GCP using service account key
       - name: Set up Google Cloud SDK
