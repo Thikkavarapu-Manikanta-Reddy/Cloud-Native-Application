@@ -1,0 +1,14 @@
+[Unit]
+Description=Web App Service
+After=network.target
+
+[Service]
+User=csye6225
+Group=csye6225
+WorkingDirectory=/home/csye6225/webapp/webapp_develop/
+ExecStart=/usr/bin/node /home/csye6225/webapp/webapp_develop/server.js
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

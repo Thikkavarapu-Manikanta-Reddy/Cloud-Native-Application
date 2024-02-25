@@ -1,0 +1,68 @@
+name: Packer Machine Image Build
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  packer-machine-image-build:
+    runs-on: ubuntu-latest
+
+    env:
+      PKR_VAR_sql_user: ${{ secrets.DB_USER }}
+      PKR_VAR_sql_password: ${{ secrets.DB_PASSWORD }}
+
+    services:
+      mysql:
+        image: mysql:latest
+        env:
+          MYSQL_ROOT_PASSWORD: ${{ secrets.DB_PASSWORD }}
+        ports:
+          - 3306:3306
+
+    steps:
+      - uses: actions/checkout@v3
+      # set a new variable to the current date
+      - name: Set sequalize environment
+        run: export NODE_ENV=development
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 19.4
+
+      - name: Create .env file
+        run: |
+          touch .env
+          echo "DB_USER=${{ secrets.DB_USER }}" >> .env
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+          echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env
+          echo "DB_HOSTNAME=${{ secrets.DB_HOSTNAME }}" >> .env
+      
+      - name: Build application artifact
+        run: zip -r webapp.zip ./
+      
+      - name: Install dependencies
+        run: npm ci
+      # - run: npm run build --if-present
+
+      - name: Start Server
+        run: npm run start &
+
+      - name: Run Test
+        run: npm run test2
+
+      # Authenticate with GCP using service account key
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
+
+      - name: Install Packer
+        uses: hashicorp/setup-packer@main
+
+      - name: Build image
+        run: |
+          packer init -var "project_id=${{ secrets.GCP_PROJECT_ID }}" -var "zone=${{ secrets.ZONE }}" packer
+          packer build -var "project_id=${{ secrets.GCP_PROJECT_ID }}" -var "zone=${{ secrets.ZONE }}" packer

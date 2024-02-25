@@ -1,4 +1,4 @@
-const request = require("supertest")("http://localhost:8081/");
+const request = require("supertest")("http://localhost:8080/");
 const assert = require("chai").assert;
 
 const test_user1 = {

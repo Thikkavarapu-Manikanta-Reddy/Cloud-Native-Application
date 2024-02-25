@@ -1,0 +1,5 @@
+// image_name          = "centos-image"
+// project_id          = "csye6255-assignment-3-414221"
+// ssh_username        = "packer"
+// zone                = "us-central1-c"
+// source_image_family = "centos-stream-8"
