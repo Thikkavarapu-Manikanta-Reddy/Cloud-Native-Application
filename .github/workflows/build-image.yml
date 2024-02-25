@@ -9,13 +9,14 @@ on:
 jobs:
   packer-machine-image-build:
     runs-on: ubuntu-latest
-    env:
-        DB_USER: ${{ secrets.DB_USER }}
-        DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-        DB_NAME: ${{ secrets.DB_NAME }}
-        DB_HOSTNAME: ${{ secrets.DB_HOSTNAME }}
-        PKR_VAR_sql_user: ${{ secrets.DB_USER }}
-        PKR_VAR_sql_password: ${{ secrets.DB_PASSWORD }}
+
+    services:
+      mysql:
+        image: mysql:latest
+        env:
+          MYSQL_ROOT_PASSWORD: ${{ secrets.DB_PASSWORD }}
+        ports:
+          - 3306:3306
 
     steps:
       - uses: actions/checkout@v3
@@ -42,8 +43,11 @@ jobs:
         run: npm ci
       # - run: npm run build --if-present
 
+      - name: Start Server
+        run: npm run start &
+
       - name: Run Test
-        run: npm run test
+        run: npm run test2
 
       # Authenticate with GCP using service account key
       - name: Set up Google Cloud SDK
