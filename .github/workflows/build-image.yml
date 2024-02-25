@@ -10,6 +10,10 @@ jobs:
   packer-machine-image-build:
     runs-on: ubuntu-latest
 
+    env:
+      PKR_VAR_sql_user: ${{ secrets.DB_USER }}
+      PKR_VAR_sql_password: ${{ secrets.DB_PASSWORD }}
+
     services:
       mysql:
         image: mysql:latest
