@@ -24,24 +24,24 @@ sudo unzip /tmp/webapp -d /home/csye6225/webapp/webapp_develop/
 sudo npm install --prefix /home/csye6225/webapp/webapp_develop/
 
 # Set ownership of application files to the newly created user
-sudo chown -R csye6225:csye6225 /home/csye6225/webapp/
+# sudo chown -R csye6225:csye6225 /home/csye6225/webapp/
 
 # Show ownership of the artifacts
-sudo ls -al /home/csye6225/webapp/webapp_develop/
+# sudo ls -al /home/csye6225/webapp/webapp_develop/
 
 # Start MySQL service
-sudo systemctl start mysqld
+# sudo systemctl start mysqld
 
 # Wait for MySQL service to become available
-until sudo mysqladmin ping &>/dev/null; do
-    echo "Waiting for MySQL to start..."
-    sleep 1
-done
+# until sudo mysqladmin ping &>/dev/null; do
+#     echo "Waiting for MySQL to start..."
+#     sleep 1
+# done
 
 # Set MySQL root password
-sudo mysql -e "ALTER USER '$SQL_USER'@'localhost' IDENTIFIED WITH mysql_native_password BY '$SQL_PASSWORD'; FLUSH PRIVILEGES;"
+# sudo mysql -e "ALTER USER '$SQL_USER'@'localhost' IDENTIFIED WITH mysql_native_password BY '$SQL_PASSWORD'; FLUSH PRIVILEGES;"
 
-sudo systemctl enable mysqld
+# sudo systemctl enable mysqld
 
 # Create systemd service file
 sudo cp /home/csye6225/webapp/webapp_develop/runappdefault.service /etc/systemd/system/runappdefault.service
