@@ -32,12 +32,14 @@ variable image_family {
   default     = "centos-8"
 }
 
-variable "sql_user" {
-  type    = string
-  default = "user"
-}
+// UPDATED THE DATABASE TO NEW GCP INSTANCE
 
-variable "sql_password" {
-  type    = string
-  default = "pass"
-}
+// variable "sql_user" {
+//   type    = string
+//   default = "user"
+// }
+
+// variable "sql_password" {
+//   type    = string
+//   default = "pass"
+// }

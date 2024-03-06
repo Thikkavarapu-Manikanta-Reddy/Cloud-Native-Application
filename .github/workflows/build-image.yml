@@ -11,8 +11,10 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      PKR_VAR_sql_user: ${{ secrets.DB_USER }}
-      PKR_VAR_sql_password: ${{ secrets.DB_PASSWORD }}
+      DB_USER: ${{ secrets.DB_USER }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      DB_NAME: ${{ secrets.DB_NAME }}
+      DB_HOSTNAME: ${{ secrets.DB_HOSTNAME }}
 
     services:
       mysql:
@@ -32,13 +34,15 @@ jobs:
         with:
           node-version: 19.4
 
-      - name: Create .env file
-        run: |
-          touch .env
-          echo "DB_USER=${{ secrets.DB_USER }}" >> .env
-          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
-          echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env
-          echo "DB_HOSTNAME=${{ secrets.DB_HOSTNAME }}" >> .env
+      # Creating the env file from terraform using CloudSQLInstance IP as a hostname and so on...
+
+      # - name: Create .env file
+      #   run: |
+      #     touch .env
+      #     echo "DB_USER=${{ secrets.DB_USER }}" >> .env
+      #     echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+      #     echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env
+      #     echo "DB_HOSTNAME=${{ secrets.DB_HOSTNAME }}" >> .env
       
       - name: Build application artifact
         run: zip -r webapp.zip ./
