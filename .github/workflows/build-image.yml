@@ -33,6 +33,16 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 19.4
+
+      # Creating the env file from terraform using CloudSQLInstance IP as a hostname and so on...
+
+      # - name: Create .env file
+      #   run: |
+      #     touch .env
+      #     echo "DB_USER=${{ secrets.DB_USER }}" >> .env
+      #     echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+      #     echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env
+      #     echo "DB_HOSTNAME=${{ secrets.DB_HOSTNAME }}" >> .env
       
       - name: Build application artifact
         run: zip -r webapp.zip ./

@@ -30,6 +30,13 @@ build {
 
   provisioner "shell" {
     script = "./startapp.sh"
+
+    // UPDATED THE DATABASE TO NEW GCP INSTANCE
+
+    // environment_vars = [
+    //   "SQL_USER=${var.sql_user}",
+    //   "SQL_PASSWORD=${var.sql_password}"
+    // ]
   }
 
 }

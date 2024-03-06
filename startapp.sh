@@ -24,10 +24,14 @@ sudo unzip /tmp/webapp -d /home/csye6225/webapp/webapp_develop/
 sudo npm install --prefix /home/csye6225/webapp/webapp_develop/
 
 # Set ownership of application files to the newly created user
-# sudo chown -R csye6225:csye6225 /home/csye6225/webapp/
+sudo chown -R csye6225:csye6225 /home/csye6225/webapp/
 
 # Show ownership of the artifacts
-# sudo ls -al /home/csye6225/webapp/webapp_develop/
+sudo ls -al /home/csye6225/webapp/webapp_develop/
+
+########################################################################
+#              UPDATED THE DATABASE TO NEW GCP INSTANCE                #
+########################################################################
 
 # Start MySQL service
 # sudo systemctl start mysqld
