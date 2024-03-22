@@ -17,18 +17,6 @@ sudo dnf install -y nodejs mysql-server unzip
 # Verify installation
 node --version
 
-# Copy application artifacts
-
-sudo mkdir -p /home/csye6225/webapp/webapp_develop/
-sudo unzip /tmp/webapp -d /home/csye6225/webapp/webapp_develop/
-sudo npm install --prefix /home/csye6225/webapp/webapp_develop/
-
-# Set ownership of application files to the newly created user
-sudo chown -R csye6225:csye6225 /home/csye6225/webapp/
-
-# Show ownership of the artifacts
-sudo ls -al /home/csye6225/webapp/webapp_develop/
-
 # Install google opsagent
 echo "Instaling google ops-agent"
 curl -sSO https://dl.google.com/cloudagents/add-google-cloud-ops-agent-repo.sh
@@ -44,6 +32,18 @@ sudo mkdir -p /var/log/webapp/
 #update the permissions of the logs folder
 sudo chown csye6225:csye6225 /var/log/webapp/
 sudo chmod -R 755 /var/log/webapp
+
+# Copy application artifacts
+
+sudo mkdir -p /home/csye6225/webapp/webapp_develop/
+sudo unzip /tmp/webapp -d /home/csye6225/webapp/webapp_develop/
+sudo npm install --prefix /home/csye6225/webapp/webapp_develop/
+
+# Set ownership of application files to the newly created user
+sudo chown -R csye6225:csye6225 /home/csye6225/webapp/
+
+# Show ownership of the artifacts
+sudo ls -al /home/csye6225/webapp/webapp_develop/
 
 ########################################################################
 #              UPDATED THE DATABASE TO NEW GCP INSTANCE                #
