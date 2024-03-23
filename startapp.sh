@@ -71,6 +71,7 @@ sudo cp /home/csye6225/webapp/webapp_develop/runappdefault-path.path /etc/system
 sudo systemctl start runappdefault
 sudo systemctl enable runappdefault
 sudo systemctl enable runappdefault-path.path
+sudo systemctl restart google-cloud-ops-agent
 
 # Reload systemd to load new service file
 
