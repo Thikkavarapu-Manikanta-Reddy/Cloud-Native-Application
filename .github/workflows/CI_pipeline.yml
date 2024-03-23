@@ -24,7 +24,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - uses: actions/checkout@v3
-      # set a new variable to the current date
+      # This won't work because NODE_ENV set to development but it is only in this step, in next step NODE_ENV will be undeined
       - name: Set sequalize environment
         run: export NODE_ENV=development
       - name: Use Node.js
