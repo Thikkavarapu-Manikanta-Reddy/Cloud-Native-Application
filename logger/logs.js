@@ -8,8 +8,12 @@ const logger = winston.createLogger({
   ),
   transports: [
     new winston.transports.Console(),
-    new winston.transports.File({ filename: '/var/log/webapp/application.log' })
+    new winston.transports.File({ filename: './log/application.log' })
   ]
 });
+
+if (process.env.NODE_ENV === 'production') {
+  logger.add(new winston.transports.File({ filename: '/var/log/webapp/application.log' }));
+}
  
 module.exports = logger;
