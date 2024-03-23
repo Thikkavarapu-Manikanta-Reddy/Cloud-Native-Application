@@ -65,10 +65,12 @@ sudo ls -al /home/csye6225/webapp/webapp_develop/
 
 # Create systemd service file
 sudo cp /home/csye6225/webapp/webapp_develop/runappdefault.service /etc/systemd/system/runappdefault.service
+sudo cp /home/csye6225/webapp/webapp_develop/runappdefault-path.path /etc/systemd/system/runappdefault-path.path
 
 # Enable and start the systemd service
 sudo systemctl start runappdefault
 sudo systemctl enable runappdefault
+sudo systemctl enable runappdefault-path.path
 
 # Reload systemd to load new service file
 
