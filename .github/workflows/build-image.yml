@@ -15,6 +15,7 @@ jobs:
       DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
       DB_NAME: ${{ secrets.DB_NAME }}
       DB_HOSTNAME: ${{ secrets.DB_HOSTNAME }}
+      NODE_ENV: development
 
     services:
       mysql:
@@ -26,9 +27,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      # set a new variable to the current date
-      - name: Set sequalize environment
-        run: export NODE_ENV=development
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
