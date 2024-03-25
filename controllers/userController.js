@@ -1,11 +1,14 @@
 const { User } = require("../models");
 const bcrypt = require("bcrypt");
 const { setResponse, setServerError, setRequestError } = require("./utils");
+const logger = require('../logger/logs')
 
 const emailRegex =
     /^[a-zA-Z0-9.!#$%&'+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)$/;
 
 const createUser = async (req, res) => {
+
+    logger.info("Create a user!");
 
     try {
         
@@ -152,6 +155,7 @@ const updateUser = async (req, res) => {
 
 
 const getUserById = async (req, res) => {
+    logger.info("Get a user!");
     try {
         const userId = req.params.id;
         const userObj = await User.findByPk(userId);

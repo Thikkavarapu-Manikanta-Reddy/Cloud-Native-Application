@@ -1,0 +1,8 @@
+[Unit]
+Description=Path check for Your Web App Service
+
+[Path]
+PathExists=/home/csye6225/webapp/webapp_develop/.env
+
+[Install]
+WantedBy=multi-user.target

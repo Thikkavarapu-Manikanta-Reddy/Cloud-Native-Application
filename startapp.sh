@@ -17,6 +17,22 @@ sudo dnf install -y nodejs mysql-server unzip
 # Verify installation
 node --version
 
+# Install google opsagent
+echo "Instaling google ops-agent"
+curl -sSO https://dl.google.com/cloudagents/add-google-cloud-ops-agent-repo.sh
+sudo bash add-google-cloud-ops-agent-repo.sh --also-install
+
+# update the configuration file
+echo "updating the agent configuration"
+sudo mv -f /tmp/config.yaml /etc/google-cloud-ops-agent/
+sudo chown -R csye6225:csye6225 /etc/google-cloud-ops-agent/
+#creating logs folder
+sudo mkdir -p /var/log/webapp/
+
+#update the permissions of the logs folder
+sudo chown csye6225:csye6225 /var/log/webapp/
+sudo chmod -R 755 /var/log/webapp
+
 # Copy application artifacts
 
 sudo mkdir -p /home/csye6225/webapp/webapp_develop/
@@ -49,10 +65,13 @@ sudo ls -al /home/csye6225/webapp/webapp_develop/
 
 # Create systemd service file
 sudo cp /home/csye6225/webapp/webapp_develop/runappdefault.service /etc/systemd/system/runappdefault.service
+sudo cp /home/csye6225/webapp/webapp_develop/runappdefault-path.path /etc/systemd/system/runappdefault-path.path
 
 # Enable and start the systemd service
 sudo systemctl start runappdefault
 sudo systemctl enable runappdefault
+sudo systemctl enable runappdefault-path.path
+sudo systemctl restart google-cloud-ops-agent
 
 # Reload systemd to load new service file
 

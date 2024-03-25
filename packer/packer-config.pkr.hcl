@@ -8,7 +8,7 @@ packer {
 }
 
 source "googlecompute" "custom-mi" {
-  project_id          = var.project_id
+  project_id = var.project_id
   // image_name          = "${var.image_name}-${formatdate("YYYY-MM-DD-hh-mm-ss", timestamp())}"
   image_name          = var.image_name
   zone                = var.zone
@@ -20,12 +20,17 @@ source "googlecompute" "custom-mi" {
 build {
   name = "csye6255-assignemnt-4-centos"
   sources = [
-   "source.googlecompute.custom-mi"
+    "source.googlecompute.custom-mi"
   ]
 
   provisioner "file" {
     source      = "./webapp.zip"
     destination = "/tmp/webapp.zip"
+  }
+
+  provisioner "file" {
+    source      = "packer/google-cloud-ops-agent-config/config.yaml"
+    destination = "/tmp/"
   }
 
   provisioner "shell" {
