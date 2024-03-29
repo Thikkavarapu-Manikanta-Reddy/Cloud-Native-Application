@@ -1,7 +1,7 @@
 const express = require('express')
 // import {User} from '../models';
 const { User } = require('../models')
-const { createUser, getUserById, updateUser } = require('../controllers/userController')
+const { createUser, getUserById, updateUser, verifyUser } = require('../controllers/userController')
 const BasicAuth = require('../middleware/auth')
 
 const UserRoute = express.Router();
@@ -17,6 +17,7 @@ UserRoute.post('/', createUser);
 
 UserRoute.put('/:id', BasicAuth, updateUser);
 
+UserRoute.post('/verify', verifyUser);
 
 module.exports = UserRoute;
 // export default UserRoute;

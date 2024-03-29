@@ -1,7 +1,9 @@
-const { User } = require("../models");
+const { User, EmailLog } = require("../models");
 const bcrypt = require("bcrypt");
 const { setResponse, setServerError, setRequestError } = require("./utils");
-const logger = require('../logger/logs')
+const logger = require('../logger/logs');
+const publishMessageToPubSub = require('../helpers/gcpPubMsg');
+const crypto = require('crypto');
 
 const emailRegex =
     /^[a-zA-Z0-9.!#$%&'+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)$/;
@@ -188,8 +190,49 @@ const getUserById = async (req, res) => {
     }
 };
 
+const verifyUser = async(req,res)=>{
+    const { email, token } = req.query;
+
+    try {
+
+        const user = await User.findOne({ where: { username: email, verifyCode: token , emailVerified: false} });
+        const maillog = await EmailLog.findOne({where:{email}})
+
+        if (!user) {
+        return res.status(400).send('Invalid verification code or email.');
+        }
+
+        const expirationTime = new Date(maillog.email_sent);
+        expirationTime.setMinutes(expirationTime.getMinutes() + 2);
+        if (Date.now() > expirationTime) {
+
+            const newVerificationCode = crypto.randomBytes(6).toString('hex');
+            user.verifyCode = newVerificationCode;
+            maillog.email_sent = Date.now();
+            await user.save();
+            await maillog.save();
+            const result = user.toJSON();
+            delete result.password;
+
+            await publishMessageToPubSub(email, newVerificationCode);
+
+            return res.status(400).send('Verification code has expired. A new verification email has been sent.');
+        }
+
+        // Mark the user as verified
+        user.emailVerified = true;
+        await user.save();
+
+        res.status(200).send('Verification successful. You can now access your account.');
+    } catch (error) {
+        console.error('Error verifying user:', error);
+        res.status(500).send('Error verifying user.');
+    }
+}
+
 module.exports = {
     createUser,
     updateUser,
     getUserById,
+    verifyUser
 };
