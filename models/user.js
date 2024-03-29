@@ -48,6 +48,9 @@ module.exports = (sequelize, DataTypes) => {
     password: {
       type: DataTypes.STRING,
       required: true,
+    },
+    verifyCode: {
+      type: DataTypes.STRING
     }
   }, {
     sequelize,

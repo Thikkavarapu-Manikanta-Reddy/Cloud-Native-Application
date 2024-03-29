@@ -56,13 +56,19 @@ const createUser = async (req, res) => {
 
         const salt = await bcrypt.genSalt(10);
         const securedPassword = await bcrypt.hash(req.body.password, salt);
+        const verificationCode = crypto.randomBytes(6).toString('hex');
+
         const user = User.build({
             username: req.body.username,
             password: securedPassword,
             first_name: req.body.first_name,
             last_name: req.body.last_name,
+            verifyCode :verificationCode
         });
         const savedUser = await user.save();
+
+        await publishMessageToPubSub(req.body.username, verificationCode);
+
         // remove password from the res
         const returnUser = {
             id: savedUser.id,
@@ -72,6 +78,9 @@ const createUser = async (req, res) => {
             account_created: savedUser.account_created,
             account_updated: savedUser.account_updated,
         };
+
+        logger.info("User creation successful");
+
         setResponse(returnUser, res, 201);
     
     } catch (error) {
@@ -149,6 +158,7 @@ const updateUser = async (req, res) => {
                 res
             );
         }
+        logger.info("User updated successfully");
         return setResponse({ msg: "Updated Successfully" }, res, 204);
     } catch (error) {
         setResponse({ msg: error.message }, res, 400);
