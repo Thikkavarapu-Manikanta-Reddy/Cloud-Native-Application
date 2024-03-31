@@ -63,11 +63,13 @@ const createUser = async (req, res) => {
             password: securedPassword,
             first_name: req.body.first_name,
             last_name: req.body.last_name,
-            verifyCode :verificationCode
+            verifyCode : verificationCode
         });
         const savedUser = await user.save();
 
-        await publishMessageToPubSub(req.body.username, verificationCode);
+        if(process.env.NODE_ENV != 'development') {
+            await publishMessageToPubSub(req.body.username, verificationCode);
+        }
 
         // remove password from the res
         const returnUser = {
