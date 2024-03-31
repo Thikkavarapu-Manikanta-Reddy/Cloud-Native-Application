@@ -20,6 +20,12 @@ variable ssh_user {
   default     = "packer"
 }
 
+variable source_image {
+  type        = string
+  description = "Source image being created"
+  default     = "centos-stream-8-v20240312"
+}
+
 variable source_image_family {
   type        = string
   description = "Source image family being created"
