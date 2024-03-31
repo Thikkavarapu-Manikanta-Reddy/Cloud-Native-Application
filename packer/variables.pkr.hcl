@@ -6,7 +6,7 @@ variable "project_id" {
 variable "image_name" {
   type        = string
   description = "The name of the created machine image"
-  default     = "centos-image-v0"
+  default     = "centos-image"
 }
 
 variable "zone" {
@@ -18,12 +18,6 @@ variable ssh_user {
   type        = string
   description = "Name of the ssh user"
   default     = "packer"
-}
-
-variable source_image {
-  type        = string
-  description = "Source image being created"
-  default     = "centos-stream-8-v20240312"
 }
 
 variable source_image_family {
