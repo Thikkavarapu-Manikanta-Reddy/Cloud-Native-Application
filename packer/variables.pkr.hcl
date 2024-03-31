@@ -6,7 +6,7 @@ variable "project_id" {
 variable "image_name" {
   type        = string
   description = "The name of the created machine image"
-  default     = "centos-image"
+  default     = "centos-image-v0"
 }
 
 variable "zone" {
