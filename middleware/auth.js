@@ -48,9 +48,8 @@ const BasicAuth = async (req, res, next) => {
 
     if(process.env.NODE_ENV != 'development') {
         if (user.emailVerified) {
-            next();
+            return next();
         }
-    
         return setResponse({msg: "User email not verified"}, res, 403);
     }
     else {
