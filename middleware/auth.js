@@ -36,7 +36,7 @@ const BasicAuth = async (req, res, next) => {
     // verify password
     const isPasswordMatch = bcrypt.compareSync(password, user.password);
     if (!isPasswordMatch) {
-        return setResponse({msg: "User not found"}, res, 401);
+        return setResponse({msg: "Password not matching"}, res, 401);
     }
 
     // verify if user is trying to access his own account
@@ -45,7 +45,17 @@ const BasicAuth = async (req, res, next) => {
             return setResponse({msg: "Forbidden Resource"}, res, 403);
         }
     }
-    next();
+
+    if(process.env.NODE_ENV != 'development') {
+        if (user.emailVerified) {
+            next();
+        }
+    
+        return setResponse({msg: "User email not verified"}, res, 403);
+    }
+    else {
+        next();
+    }
 };
 
 module.exports = BasicAuth;
