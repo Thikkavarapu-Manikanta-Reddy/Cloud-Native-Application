@@ -39,7 +39,7 @@ jobs:
 
       - name: Configure MySQL
         run: |
-          sudo mysql --user=${{ secrets.DB_USER }} --password=${{ secrets.DB_PASSWORD }} --execute="CREATE DATABASE IF NOT EXISTS ${{ secrets.DB_NAME }};"
+          sudo mysql --host=${{ secrets.DB_HOSTNAME }} --user=${{ secrets.DB_USER }} --password=${{ secrets.DB_PASSWORD }} --execute="CREATE DATABASE IF NOT EXISTS ${{ secrets.DB_NAME }};"
       
       - name: Install Dependencies
         run: npm install
