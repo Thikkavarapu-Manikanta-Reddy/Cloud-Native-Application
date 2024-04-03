@@ -1,12 +1,16 @@
-// import HealthRoute from './healthRoute.js';
-const HealthRoute = require('./healthRoute.js')
-const UserRoute = require('./userRoutes.js')
-// import UserRoute from './userRoutes.js'
+const {checkMethodType, checkUserMethod} = require('../middleware/checkMethod');
+const checkBody = require('../middleware/checkBody');
+const healthzRoute = require('./healthz')
+const userRoutes = require('./user_routes');
+const checkParams = require('../middleware/checkParams');
 
-const mainRouter = (app) => { 
-    app.use("/healthz", HealthRoute);
-    app.use("/v1/user", UserRoute);
+function routePaths(app){
+  app.use('/healthz',checkParams, checkMethodType, checkBody, healthzRoute)
+  app.use('/v1/user', checkUserMethod, userRoutes)
+  app.use((req,res)=>{
+    return res.status(404).json().send();
+  })
+
 }
 
-// export default mainRouter;
-module.exports = mainRouter;
+module.exports = routePaths;

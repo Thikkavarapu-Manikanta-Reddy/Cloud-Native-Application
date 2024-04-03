@@ -1,15 +1,15 @@
 logging:
   receivers:
-    my-app-receiver:
+    my-webapp-receiver:
       type: files
       include_paths:
         - /var/log/webapp/application.log
       record_log_file_path: true
   processors:
-    my-app-processor:
+    my-webapp-processor:
       type: parse_json
-      time_key: time
-      time_format: "%Y-%m-%dT%H:%M:%S.%L%Z"
+      time_key: timestamp
+      time_format: '%Y-%m-%dT%H:%M:%S.%L%z'
     move_severity:
       type: modify_fields
       fields:
@@ -18,5 +18,5 @@ logging:
   service:
     pipelines:
       default_pipeline:
-        receivers: [my-app-receiver]
-        processors: [my-app-processor, move_severity]
+        receivers: [my-webapp-receiver]
+        processors: [my-webapp-processor, move_severity]"

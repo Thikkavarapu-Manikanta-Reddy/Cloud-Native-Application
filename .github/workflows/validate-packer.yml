@@ -1,13 +1,14 @@
-name: Packer Machine Image Build
+name: Packer Template Validation
 
 on:
   push:
     branches: [ "main" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main" ] 
 
 jobs:
-  build-and-deploy:
+  validate: 
+    name: Validate Packer code
     runs-on: ubuntu-latest
     env:
         DB_HOSTNAME: ${{ secrets.DB_HOSTNAME }}
@@ -23,24 +24,15 @@ jobs:
           MYSQL_ROOT_PASSWORD: ${{ secrets.DB_PASSWORD }}
         ports:
           - 3306:3306
-
+          
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
+      
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
           node-version: '18'
-      
-      - name: Create .env file
-        run: |
-          touch .env
-          echo "DB_HOSTNAME=${{ secrets.DB_HOSTNAME }}" > .env
-          echo "DB_USER=${{ secrets.DB_USER }}" >> .env
-          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
-          echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env
-          echo "PORT= ${{ secrets.PORT}}" >> .env
       
       - name: Build application artifact
         run: zip -r webapp.zip ./
@@ -51,16 +43,22 @@ jobs:
       - name: Run Integration Tests
         run: npm run test:integration
 
-      # Authenticate with GCP using service account key
-      - name: Set up Google Cloud SDK
-        uses: google-github-actions/auth@v2
-        with:
-          credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
-
       - name: Install Packer
         uses: hashicorp/setup-packer@main
 
-      - name: Build image
+      - name: Initialize Packer
+        run: packer init packer
+        
+      - name: Packer fmt
+        run: packer fmt -check packer
+
+      - name: Check if fmt command returns any error
         run: |
-          packer init -var "project_id=${{ secrets.GCP_PROJECT_ID }}" -var "zone=${{ secrets.ZONE }}" packer
-          packer build -var "project_id=${{ secrets.GCP_PROJECT_ID }}" -var "zone=${{ secrets.ZONE }}" packer
+          if [[ $? -eq 0 ]]; then
+            echo "Packer format command succeeded."
+          else
+            echo "Packer format command failed."
+            exit 1
+          fi
+      - name: Packer validate
+        run: packer validate -var "project_id=${{ secrets.GCP_PROJECT_ID }}" -var "zone=${{ secrets.ZONE }}" packer
