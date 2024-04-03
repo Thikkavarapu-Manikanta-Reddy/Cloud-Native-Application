@@ -1,7 +1,7 @@
 const request = require("supertest")
 const app = require("../../index")
 const sequelize = require("../../models/index")
-const User = require("../../models/User")
+const User = require("../../models/User_model")
 const EmailLog = require("../../models/EmailLog")
 
 describe('/v1/user Integration Tests', () => {

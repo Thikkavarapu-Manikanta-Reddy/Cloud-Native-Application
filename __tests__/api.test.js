@@ -3,7 +3,7 @@
 const request = require("supertest")
 const app = require('../index')
 const sequelize = require('../models/index');
-const User = require('../models/User');
+const User = require('../models/User_model');
 
 console.log("User Model", User);
 
@@ -18,7 +18,7 @@ jest.mock('../models/index', () => {
 });
 
 
-jest.mock('../models/User', () => () => {
+jest.mock('../models/User_model', () => () => {
   const Sequelize = require("sequelize-mock");
   const sequelizeMock = new Sequelize();
   return sequelizeMock.define('User',  {

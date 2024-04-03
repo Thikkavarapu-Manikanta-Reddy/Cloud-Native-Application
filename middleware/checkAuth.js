@@ -1,4 +1,4 @@
-const User = require('../models/User');
+const User = require('../models/User_model');
 const bcrypt = require('bcrypt');
 
 const authenticate = async(req,res,next)=>{

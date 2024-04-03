@@ -1,5 +1,6 @@
 const winston = require('winston');
 const logFilePath = process.env.NODE_ENV === 'test' ? './log/application.log' : '/var/log/webapp/application.log';
+// const logFilePath = process.env.NODE_ENV === 'test' ? './log/application.log' : './log/application.log';
 const logger = winston.createLogger({
   format: winston.format.combine(
     winston.format.timestamp(),

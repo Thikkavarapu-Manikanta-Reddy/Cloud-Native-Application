@@ -1,4 +1,4 @@
-const User = require('../models/User');
+const User = require('../models/User_model');
 const EmailLog = require('../models/EmailLog');
 const passwordGenerator = require('../helpers/passwordGenerator');
 const logger = require('../util/logger');
