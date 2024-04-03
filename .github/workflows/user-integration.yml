@@ -15,6 +15,15 @@ jobs:
         DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         DB_NAME: ${{ secrets.DB_NAME }}
         PORT: ${{ secrets.PORT}}
+
+    services:
+      mysql:
+        image: mysql:latest
+        env:
+          MYSQL_ROOT_PASSWORD: ${{ secrets.DB_PASSWORD }}
+        ports:
+          - 3306:3306
+          
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -23,22 +32,6 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '18'
-
-      - name: Install MySQL
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y mysql-server
-          sudo /etc/init.d/mysql start
-          sudo systemctl enable mysql
-          sudo systemctl status mysql
-
-      - name: Grant permissions to root user
-        run: |
-          sudo mysql -u root -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' IDENTIFIED BY '${{ secrets.DB_PASSWORD }}' WITH GRANT OPTION; FLUSH PRIVILEGES;"
-
-      - name: Configure MySQL
-        run: |
-          sudo mysql --host=${{ secrets.DB_HOSTNAME }} --user=${{ secrets.DB_USER }} --password=${{ secrets.DB_PASSWORD }} --execute="CREATE DATABASE IF NOT EXISTS ${{ secrets.DB_NAME }};"
 
       - name: Install Dependencies
         run: npm install
