@@ -12,11 +12,5 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '18.x'
-
-      - name: Show dir
-        run: ls -al
-      - name: show models
-        run: ls models/*
-
       - run: npm install
       - run: npm run test
