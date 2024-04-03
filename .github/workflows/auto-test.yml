@@ -15,6 +15,8 @@ jobs:
 
       - name: Show dir
         run: ls -al
+      - name: show models
+        run: ls models/*
 
       - run: npm install
       - run: npm run test
