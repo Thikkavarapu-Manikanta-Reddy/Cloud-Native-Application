@@ -12,6 +12,6 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '18.x'
-      - run: npm cache clean --force
+      - run: ls -al
       - run: npm install
       - run: npm run test
