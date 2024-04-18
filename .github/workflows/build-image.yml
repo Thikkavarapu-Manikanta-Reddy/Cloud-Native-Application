@@ -77,7 +77,8 @@ jobs:
         run: |
           PACKER_BUILD_IMAGE_ID=$(jq -r '.builds[-1].artifact_id' manifest.json | cut -d ":" -f2)
           echo $PACKER_BUILD_IMAGE_ID
-          echo PACKER_BUILD_IMAGE_ID=$PACKER_BUILD_IMAGE_ID >> $GITHUB_ENV
+          echo "PACKER_BUILD_IMAGE_ID=$PACKER_BUILD_IMAGE_ID" >> "$GITHUB_OUTPUT"
+          echo NEW_IMAGE=$(jq -r '.builds[-1].artifact_id' manifest.json | cut -d ":" -f2) >> $GITHUB_ENV
       
       - name: Check Packer Image ID
         run: echo $PACKER_BUILD_IMAGE_ID
@@ -87,7 +88,7 @@ jobs:
           WORKFLOW_UUID=$(uuidgen | tr -d '-')
           echo "TEMPLATE_NAME=${{ env.TEMPLATE_NAME }}-$WORKFLOW_UUID" >> $GITHUB_ENV
           echo $GITHUB_ENV
-          echo "template name -" $TEMPLATE_NAME
+          echo "template mane -" $TEMPLATE_NAME
 
       - name: Create instance template
         env:
@@ -101,6 +102,7 @@ jobs:
             VM_SERVICE_ACCOUNT: ${{secrets.VM_SERVICE_ACCOUNT}}
             VM_SERVICE_ACCOUNT_SCOPES: ${{secrets.VM_SERVICE_ACCOUNT_SCOPES}}
             VM_TAG: ${{secrets.VM_TAG }}
+            SOURCE_IMAGE: ${{env.PACKER_BUILD_IMAGE_ID}}
             VM_DISK_SIZE_GB: ${{secrets.VM_DISK_SIZE_GB}}
             VM_DISK_TYPE: ${{secrets.VM_DISK_TYPE}}
             VM_DISK_AUTO_DELETE: ${{ secrets.VM_DISK_AUTO_DELETE}}
@@ -125,7 +127,7 @@ jobs:
             --scopes="$VM_SERVICE_ACCOUNT_SCOPES" \
             --region="$REGION" \
             --tags="$VM_TAG" \
-            --create-disk="auto-delete=$VM_DISK_AUTO_DELETE,boot=$VM_DISK_BOOT,device-name=$DEVICE_NAME,image=${{ env.PACKER_BUILD_IMAGE_ID }},kms-key=$VM_KMS_KEY_LINK,mode=rw,size=$VM_DISK_SIZE_GB,type=$VM_DISK_TYPE" \
+            --create-disk="auto-delete=$VM_DISK_AUTO_DELETE,boot=$VM_DISK_BOOT,device-name=$DEVICE_NAME,image=${{ env.NEW_IMAGE }},kms-key=$VM_KMS_KEY_LINK,mode=rw,size=$VM_DISK_SIZE_GB,type=$VM_DISK_TYPE" \
             --no-shielded-secure-boot \
             --shielded-vtpm \
             --shielded-integrity-monitoring \
